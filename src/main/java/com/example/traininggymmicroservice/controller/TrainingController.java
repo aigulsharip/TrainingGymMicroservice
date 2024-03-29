@@ -17,6 +17,10 @@ import java.util.List;
 public class TrainingController {
 
     private final TrainingRepository trainingRepository;
+    @GetMapping("/status-check")
+    public ResponseEntity<String> sayHello() {
+        return ResponseEntity.ok("Hello from secured endpoint of Training Microservice");
+    }
 
     @GetMapping
     public ResponseEntity<List<Training>> getAllTrainings() {
