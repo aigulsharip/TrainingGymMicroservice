@@ -1,13 +1,15 @@
 package com.example.traininggymmicroservice.controller;
 
+import com.example.traininggymmicroservice.entity.TrainerWorkload;
+import com.example.traininggymmicroservice.entity.TrainerWorkloadRequest;
 import com.example.traininggymmicroservice.entity.Training;
+import com.example.traininggymmicroservice.repository.TrainerWorkloadRepository;
 import com.example.traininggymmicroservice.repository.TrainingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +19,10 @@ import java.util.List;
 public class TrainingController {
 
     private final TrainingRepository trainingRepository;
+
+    @Autowired
+    private TrainerWorkloadRepository trainerWorkloadRepository;
+
     @GetMapping("/status-check")
     public ResponseEntity<String> sayHello() {
         return ResponseEntity.ok("Hello from secured endpoint of Training Microservice");
@@ -30,5 +36,11 @@ public class TrainingController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+
+    @PostMapping("/trainer/workload")
+    public ResponseEntity<String> updateWorkload(@RequestBody TrainerWorkload request) {
+        trainerWorkloadRepository.save(request);
+        return ResponseEntity.ok("Workload updated successfully");
     }
 }
