@@ -15,7 +15,3 @@ public class TrainerWorkloadRequest {
     private ActionType actionType;
 }
 
-enum ActionType {
-    ADD,
-    DELETE
-}
