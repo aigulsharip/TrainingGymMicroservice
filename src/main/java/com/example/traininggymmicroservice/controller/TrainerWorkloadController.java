@@ -29,6 +29,11 @@ public class TrainerWorkloadController {
         return ResponseEntity.ok("Hello from secured endpoint of Training Microservice");
     }
 
+    @GetMapping("/message")
+    public String displayMessage() {
+        return "message from Secondary Microservice";
+    }
+
     @GetMapping("/trainer/workload")
     public ResponseEntity<List<TrainerWorkload>> getAllTrainerWorkloads() {
         log.info("Received request to get all trainer workloads");
