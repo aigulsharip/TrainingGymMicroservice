@@ -1,6 +1,6 @@
 package com.example.traininggymmicroservice.rabbitmq;
 
-import dto.OrderDTO;
+import dto.TrainingDTO;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.support.converter.DefaultClassMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -27,14 +27,14 @@ public class RabbitConfig {
         DefaultClassMapper classMapper = new DefaultClassMapper();
         Map<String, Class<?>> idClassMapping = new HashMap<>();
         idClassMapping.put("java.util.ArrayList", ArrayList.class);
-        idClassMapping.put("dto.OrderDTO", OrderDTO.class);
+        idClassMapping.put("dto.TrainingDTO", TrainingDTO.class);
         classMapper.setIdClassMapping(idClassMapping);
         return classMapper;
     }
 
     @Bean
     public Queue deadLetterQueue(){
-        return QueueBuilder.durable("almaty_orders_queue.dlq").build();
+        return QueueBuilder.durable("trainings_queue.dlq").build();
     }
 
     @Bean
@@ -47,7 +47,7 @@ public class RabbitConfig {
         return BindingBuilder
                 .bind(deadLetterQueue())
                 .to(deadLetterExchange())
-                .with("dlx.almaty_orders");
+                .with("dlx.trainings");
     }
 
 }
