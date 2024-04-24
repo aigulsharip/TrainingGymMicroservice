@@ -23,16 +23,17 @@ public class OrderNotificationListener {
                     type = ExchangeTypes.TOPIC),
             key = "order.#"
     ))
-//    public void receiveAlmatyOrder(OrderDTO orderDTO){
-//        log.info("Received order ORDER : {}", orderDTO);
-//        try{
-//            processOrder(orderDTO);
-//        }catch (Exception e){
-//            log.error("Error on processing order : {}, Error : {}", orderDTO, e.getMessage());
-//            throw e;
-//        }
-//        System.out.println("Received order ORDER : " + orderDTO);
-//    }
+    public void receiveAlmatyOrder(OrderDTO orderDTO){
+        log.info("Received order ORDER : {}", orderDTO);
+        try{
+            processOrder(orderDTO);
+        }catch (Exception e){
+            log.error("Error on processing order : {}, Error : {}", orderDTO, e.getMessage());
+            throw e;
+        }
+        System.out.println("Received order ORDER : " + orderDTO);
+    }
+
 
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "customer_update_queue"),
