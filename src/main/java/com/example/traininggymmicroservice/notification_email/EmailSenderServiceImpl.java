@@ -36,8 +36,8 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         String message = "";
         message += "Good day, " + trainingDTO.getTraineeName() + "! \n \n";
         message += "You will have training with " + trainingDTO.getTrainerName() + " on " + trainingDTO.getTrainingDate() + "\n";
-        message += " You will have  " + trainingDTO.getTrainingType() + " lasting for  " + trainingDTO.getTrainingDuration()  + " minutes \n \n";
-        message += " If you want to cancel or reschedule training session, please let us know at least 4 hours before training" ;
+        message += " You will have  " + trainingDTO.getTrainingType() + " section lasting for  " + trainingDTO.getTrainingDuration()  + " minutes \n \n";
+        message += " If you want to cancel or reschedule training session, please let us know at least 4 hours before training." ;
 
 
         emailMessage.setMessage(message);
@@ -52,8 +52,8 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         String message = "";
         message += "Good day, trainer " + trainingDTO.getTrainerName() + "! \n \n";
         message += "You will have training with " + trainingDTO.getTraineeName() + " on " + trainingDTO.getTrainingDate() + "\n";
-        message += " You will have  " + trainingDTO.getTrainingType() + " lasting for  " + trainingDTO.getTrainingDuration()  + " minutes \n \n";
-        message += " You can directly contact trainee via his/her email " + trainingDTO.getTraineeEmail();
+        message += " You will have  " + trainingDTO.getTrainingType() + " section lasting for  " + trainingDTO.getTrainingDuration()  + " minutes \n \n";
+        message += " You can directly contact trainee via his/her email: " + trainingDTO.getTraineeEmail();
         emailMessage.setMessage(message);
         return emailMessage;
     }

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -15,14 +16,15 @@ import org.springframework.stereotype.Service;
 public class TrainingNotificationListener {
 
     private final EmailSenderService emailSenderService;
+    private final RabbitTemplate rabbitTemplate;
 
 
     @RabbitListener(bindings = @QueueBinding(
-            value = @Queue(value = "training_fitness_queue"
-//                arguments = {
-//                    @Argument(name = "x-dead-letter-exchange", value = "dlx"),
-//                    @Argument(name = "x-dead-letter-routing-key", value = "dlx.trainings")
-//                }
+            value = @Queue(value = "training_fitness_queue",
+                arguments = {
+                    @Argument(name = "x-dead-letter-exchange", value = "dlx"),
+                    @Argument(name = "x-dead-letter-routing-key", value = "dlx.trainings")
+                }
             ),
             exchange = @Exchange(value = "${mq.training.topic.exchange}",
                     type = ExchangeTypes.TOPIC),
@@ -30,19 +32,54 @@ public class TrainingNotificationListener {
     ))
     public void createFitnessTraining(TrainingDTO trainingDTO){
         log.info("Created training  : {}", trainingDTO);
-//        try{
-//            processFailTraining(trainingDTO);
-//        }catch (Exception e){
-//            log.error("Error on processing training : {}, Error : {}", trainingDTO, e.getMessage());
-//            throw e;
-//        }
-        System.out.println("Created training : " + trainingDTO);
+        try{
+            processIncompleteTraining(trainingDTO);
+        }catch (Exception e){
+            log.error("Error on processing training : {}, Error : {}", trainingDTO, e.getMessage());
+            throw e;
+        }
+
+        // Process the valid training
+        processValidTraining(trainingDTO);
+
+    }
+
+    private boolean isInvalid(TrainingDTO trainingDTO) {
+        // Check if any required information is missing
+        return trainingDTO.getTraineeName() == null ||
+                trainingDTO.getTrainerName() == null ||
+                trainingDTO.getTraineeEmail() == null ||
+                trainingDTO.getTrainerEmail() == null ||
+                trainingDTO.getTrainingType() == null ||
+                trainingDTO.getTrainingDate() == null ||
+                trainingDTO.getTrainingDuration() <= 0;
+    }
+
+    private void processValidTraining(TrainingDTO trainingDTO) {
+        // Process the valid training
+        System.out.println("Processing training: " + trainingDTO);
+    }
+
+    private void processIncompleteTraining(TrainingDTO trainingDTO){
+        if (isInvalid(trainingDTO)) {
+            throw new RuntimeException("Failed to process incomplete training");
+        }
     }
 
     private void processFailTraining(TrainingDTO trainingDTO){
         if(true){
-            throw new RuntimeException("Failed to process order");
+            throw new RuntimeException("Failed to process training");
         }
+        /*
+        try{
+            processFailTraining(trainingDTO);
+        }catch (Exception e){
+            log.error("Error on processing training : {}, Error : {}", trainingDTO, e.getMessage());
+            throw e;
+        }
+         */
+
+
     }
 
     @RabbitListener(bindings = @QueueBinding(
